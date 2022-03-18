@@ -1,0 +1,13 @@
+app:
+  published_port: 9100
+  target_port: 9100
+  probe:
+    port: 8086
+grafana:
+  version: latest
+  port: 3000
+  size: 100Mi
+prometheus:
+  version: v2.24.0
+  port: 9090
+  size: 100Mi

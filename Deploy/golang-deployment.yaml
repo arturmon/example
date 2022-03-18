@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    io.kompose.service: golang
+  name: golang
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: golang
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        io.kompose.service: golang
+    spec:
+      containers:
+        - image: golang
+          name: golang
+          ports:
+            - containerPort: 8086
+            - containerPort: 9100
+          resources: {}
+      restartPolicy: Always
+status: {}

@@ -1,0 +1,5 @@
+{
+    "yaml.schemas": {
+        "https://json.schemastore.org/helmfile.json": "file:///i%3A/%D1%83%D1%87%D0%B5%D0%B1%D0%B0/example/Helm_Deploy/values.yaml"
+    }
+}

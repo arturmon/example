@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    io.kompose.service: grafana
+    heritage: {{ $.Release.Service | quote }}
+    release: {{ $.Release.Name | quote }}
+    chart: {{ template "name.chart" $ }}
+  name: grafana-{{ template "name.fullname" . }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: grafana
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        io.kompose.service: grafana
+    spec:
+      containers:
+        - image: grafana/grafana:{{ .Values.grafana.version }}
+          name: grafana
+          ports:
+            - containerPort: {{ .Values.grafana.port }}
+          resources: {}
+          volumeMounts:
+            - mountPath: /var/lib/grafana
+              name: grafana-storage
+      restartPolicy: Always
+      volumes:
+        - name: grafana-storage
+          persistentVolumeClaim:
+            claimName: grafana-storage
+status: {}
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    io.kompose.service: grafana
+    heritage: {{ $.Release.Service | quote }}
+    release: {{ $.Release.Name | quote }}
+    chart: {{ template "name.chart" $ }}
+  name: grafana
+spec:
+  ports:
+    - name: "{{ .Values.grafana.port }}"
+      port: {{ .Values.grafana.port }}
+      targetPort: {{ .Values.grafana.port }}
+  selector:
+    io.kompose.service: grafana
+  type: LoadBalancer
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels:
+    io.kompose.service: grafana-storage
+    heritage: {{ $.Release.Service | quote }}
+    release: {{ $.Release.Name | quote }}
+    chart: {{ template "name.chart" $ }}
+  name: grafana-storage
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.grafana.size }}
+status: {}
